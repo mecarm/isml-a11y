@@ -32,7 +32,32 @@ It does **not** modify your code unless you explicitly tell it to with the `--fi
 
 ## 2. Installation
 
-**Option A — Install globally** (run from anywhere on your machine):
+**Option A — Clone from GitHub** (current method while npm package is not yet published):
+
+```bash
+git clone https://github.com/mecarm/isml-a11y.git
+cd isml-a11y
+npm install
+```
+
+Once cloned, run every command using `node bin/isml-a11y.js` instead of `isml-a11y`:
+
+```bash
+# Instead of: isml-a11y check --path ./cartridges
+node bin/isml-a11y.js check --path ./cartridges
+```
+
+All examples in this guide use the `isml-a11y` shorthand. If you cloned the repo, just replace it with `node bin/isml-a11y.js` and everything works the same.
+
+> **Windows note:** if you get a script execution error when running `npm install`, run this first in PowerShell:
+> ```powershell
+> Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+> ```
+> Then run `npm install` again.
+
+---
+
+**Option B — Install globally** (available once published to npm):
 
 ```bash
 npm install -g isml-a11y
@@ -40,7 +65,7 @@ npm install -g isml-a11y
 
 After this you can type `isml-a11y` from any folder in your terminal.
 
-**Option B — Install locally** (only available inside one project):
+**Option C — Install locally** (available once published to npm):
 
 ```bash
 npm install isml-a11y
