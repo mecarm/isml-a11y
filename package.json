@@ -1,0 +1,23 @@
+{
+  "name": "isml-a11y",
+  "version": "1.0.0",
+  "description": "Accessibility scanner for ISML files (Salesforce B2C Commerce markup language)",
+  "main": "src/cli.js",
+  "bin": {
+    "isml-a11y": "./bin/isml-a11y.js"
+  },
+  "scripts": {
+    "test": "node --test tests/rules/img-alt.test.js tests/rules/button-type.test.js tests/rules/input-label.test.js tests/rules/empty-links.test.js tests/scanner.test.js"
+  },
+  "keywords": ["accessibility", "a11y", "isml", "salesforce", "b2c", "linter"],
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "commander": "^12.1.0",
+    "fs-extra": "^11.2.0",
+    "glob": "^10.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,90 @@
+<isinclude template="common/htmlHead" />
+
+<div class="page-wrapper">
+
+    <header>
+        <!-- GOOD: img with alt -->
+        <a href="${URLUtils.home()}">
+            <img src="${URLUtils.staticURL('images/logo.png')}" alt="My Store Logo" class="logo">
+        </a>
+
+        <!-- BAD: empty link (icon-only with no accessible text) -->
+        <a href="${URLUtils.url('Cart-Show')}">
+            <img src="${URLUtils.staticURL('images/cart-icon.svg')}" alt="">
+        </a>
+
+        <!-- GOOD: aria-label on link -->
+        <a href="${URLUtils.url('Wishlist-Show')}" aria-label="View wishlist">
+            <isinclude template="common/icons/heart" />
+        </a>
+    </header>
+
+    <main>
+        <section class="hero">
+            <!-- BAD: img without alt -->
+            <img src="${URLUtils.staticURL('images/hero-banner.jpg')}" class="hero-banner" alt="">
+
+            <!-- GOOD: img with empty alt (decorative) -->
+            <img src="${URLUtils.staticURL('images/decoration.png')}" alt="">
+        </section>
+
+        <section class="search">
+            <!-- BAD: input with no label -->
+            <input type="text" name="q" placeholder="Search products...">
+
+            <!-- GOOD: input with label[for] -->
+            <label for="email-input">Email address</label>
+            <input type="email" id="email-input" name="email">
+
+            <!-- GOOD: hidden input (exempt) -->
+            <input type="hidden" name="csrf_token" value="${pdict.csrfToken}">
+        </section>
+
+        <section class="forms">
+            <!-- BAD: button without type -->
+            <button class="btn-primary" id="add-to-cart" type="button">
+                <isprint value="${Resource.msg('button.addtocart', 'product', null)}" />
+            </button>
+
+            <!-- GOOD: button with type -->
+            <button type="submit" class="btn-secondary">
+                <isprint value="${Resource.msg('button.checkout', 'cart', null)}" />
+            </button>
+
+            <!-- GOOD: button with type="button" -->
+            <button type="button" class="btn-link" aria-expanded="false">
+                Show filters
+            </button>
+        </section>
+
+        <section class="product-grid">
+            <isloop items="${pdict.productTiles}" var="tile">
+                <div class="product-tile">
+                    <!-- BAD: img without alt (inside loop) -->
+                    <img src="${tile.image.url}" class="product-image" alt="">
+
+                    <div class="product-info">
+                        <a href="${tile.url}">
+                            <isprint value="${tile.name}" />
+                        </a>
+
+                        <!-- BAD: empty anchor -->
+                        <a href="${tile.compareUrl}"></a>
+                    </div>
+                </div>
+            </isloop>
+        </section>
+    </main>
+
+    <footer>
+        <!-- GOOD: input wrapped in label -->
+        <label>
+            Subscribe to newsletter
+            <input type="email" name="newsletter-email">
+        </label>
+
+        <!-- GOOD: input with aria-label -->
+        <input type="search" aria-label="Search the site" name="site-search">
+    </footer>
+
+</div>
