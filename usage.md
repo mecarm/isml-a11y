@@ -56,7 +56,19 @@ npm install
 
 With a fork you can freely make changes, push to your own copy, and open a Pull Request to propose your changes back to the original repo.
 
-Once cloned, run every command using `node bin/isml-a11y.js` instead of `isml-a11y`:
+If you don't have git installed, **download the ZIP** instead:
+
+1. Go to `https://github.com/mecarm/isml-a11y`
+2. Click the green **Code** button
+3. Click **Download ZIP**
+4. Extract the ZIP to a folder on your machine
+5. Open a terminal inside that folder and run:
+
+```bash
+npm install
+```
+
+Once cloned or extracted, run every command using `node bin/isml-a11y.js` instead of `isml-a11y`:
 
 ```bash
 # Instead of: isml-a11y check --path ./cartridges
