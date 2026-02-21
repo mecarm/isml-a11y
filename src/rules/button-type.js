@@ -31,13 +31,25 @@ const buttonType = {
   },
 
   fix(content) {
-    // Inject type="button" into <button> tags that don't already have a type attribute
     return content.replace(/<button\b([^>]*?)(\s*>)/gi, (match, attrs, closing) => {
-      if (/\btype\s*=/i.test(attrs)) {
-        return match; // already has type
-      }
+      if (/\btype\s*=/i.test(attrs)) return match;
       return `<button${attrs} type="button"${closing}`;
     });
+  },
+
+  async fixInteractive(content, issue, question) {
+    const answer = await question('  Button type (button/submit/reset) [button]: ');
+    const typeValue = answer.trim() || 'button';
+    const elementHtml = issue.element;
+    // Add type only to the opening tag
+    const fixed = elementHtml.replace(/^(<button\b[^>]*)>/, `$1 type="${typeValue}">`);
+    if (fixed === elementHtml) return content;
+    const updated = content.replace(elementHtml, fixed);
+    if (updated === content) {
+      console.log('  Warning: could not locate element in file — skipping.');
+      return content;
+    }
+    return updated;
   },
 };
 

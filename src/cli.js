@@ -4,7 +4,7 @@ const { Command } = require('commander');
 const path = require('path');
 const { scanFiles } = require('./scanner');
 const { runRules } = require('./engine');
-const { applyFixes } = require('./fixer');
+const { applyFixes, applyFixesInteractive } = require('./fixer');
 const { writeJsonReport } = require('./reporters/json-reporter');
 const { writeHtmlReport } = require('./reporters/html-reporter');
 
@@ -19,7 +19,8 @@ program
   .command('check')
   .description('Scan ISML files for accessibility violations')
   .requiredOption('--path <dir>', 'Directory to scan')
-  .option('--fix', 'Auto-fix fixable violations', false)
+  .option('--fix', 'Auto-fix fixable violations with safe defaults', false)
+  .option('--interactive', 'Prompt for a value for each fixable violation', false)
   .option('--report-json <file>', 'Write JSON report to file')
   .option('--report-html <file>', 'Write HTML report to file')
   .option('--silent', 'Suppress console output', false)
@@ -46,13 +47,27 @@ program
       process.exit(2);
     }
 
-    if (options.fix) {
+    if (options.interactive) {
+      if (!process.stdin.isTTY) {
+        console.error('--interactive requires an interactive terminal (stdin is not a TTY).');
+        process.exit(2);
+      }
+      try {
+        const fixedCount = await applyFixesInteractive(files, issues);
+        if (!options.silent && fixedCount > 0) {
+          console.log(`\nFixed ${fixedCount} file(s) interactively.`);
+        }
+        issues = await runRules(files);
+      } catch (err) {
+        console.error(`Error during interactive fix: ${err.message}`);
+        process.exit(2);
+      }
+    } else if (options.fix) {
       try {
         const fixedCount = await applyFixes(files, issues);
         if (!options.silent && fixedCount > 0) {
           console.log(`Fixed ${fixedCount} file(s).`);
         }
-        // Re-run rules after fix to get updated issues
         issues = await runRules(files);
       } catch (err) {
         console.error(`Error applying fixes: ${err.message}`);

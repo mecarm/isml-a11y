@@ -14,19 +14,16 @@ const imgAlt = {
 
     $('img').each((_, el) => {
       const $el = $(el);
-      if (!$el.attr('alt') && $el.attr('alt') !== '') {
-        // alt attribute is completely absent (not just empty string)
-        if ($el.attr('alt') === undefined) {
-          issues.push({
-            ruleId: imgAlt.id,
-            severity: imgAlt.severity,
-            message: 'img element is missing an alt attribute',
-            filePath,
-            line: getLineNumber($, el, content),
-            element: $.html(el),
-            fixable: imgAlt.fixable,
-          });
-        }
+      if ($el.attr('alt') === undefined) {
+        issues.push({
+          ruleId: imgAlt.id,
+          severity: imgAlt.severity,
+          message: 'img element is missing an alt attribute',
+          filePath,
+          line: getLineNumber($, el, content),
+          element: $.html(el),
+          fixable: imgAlt.fixable,
+        });
       }
     });
 
@@ -34,13 +31,24 @@ const imgAlt = {
   },
 
   fix(content) {
-    // Inject alt="" into <img> tags that don't already have an alt attribute
     return content.replace(/<img\b([^>]*?)(\s*\/?>)/gi, (match, attrs, closing) => {
-      if (/\balt\s*=/i.test(attrs)) {
-        return match; // already has alt
-      }
+      if (/\balt\s*=/i.test(attrs)) return match;
       return `<img${attrs} alt=""${closing}`;
     });
+  },
+
+  async fixInteractive(content, issue, question) {
+    const answer = await question('  Alt text (press Enter to mark as decorative with alt=""): ');
+    const altValue = answer.trim();
+    const elementHtml = issue.element;
+    const fixed = elementHtml.replace(/(\s*\/?>)$/, ` alt="${altValue}"$1`);
+    if (fixed === elementHtml) return content;
+    const updated = content.replace(elementHtml, fixed);
+    if (updated === content) {
+      console.log('  Warning: could not locate element in file — skipping.');
+      return content;
+    }
+    return updated;
   },
 };
 

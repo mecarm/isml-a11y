@@ -11,13 +11,14 @@ This guide explains every scenario you will encounter when using `isml-a11y`. It
 3. [Running a basic scan](#3-running-a-basic-scan)
 4. [Reading the output](#4-reading-the-output)
 5. [Auto-fixing issues](#5-auto-fixing-issues)
-6. [Generating a JSON report](#6-generating-a-json-report)
-7. [Generating an HTML report](#7-generating-an-html-report)
-8. [Combining options](#8-combining-options)
-9. [Running silently (for CI pipelines)](#9-running-silently-for-ci-pipelines)
-10. [Exit codes](#10-exit-codes)
-11. [Rules reference](#11-rules-reference)
-12. [What to do with non-fixable issues](#12-what-to-do-with-non-fixable-issues)
+6. [Interactive fix mode](#6-interactive-fix-mode)
+7. [Generating a JSON report](#7-generating-a-json-report)
+8. [Generating an HTML report](#8-generating-an-html-report)
+9. [Combining options](#9-combining-options)
+10. [Running silently (for CI pipelines)](#10-running-silently-for-ci-pipelines)
+11. [Exit codes](#11-exit-codes)
+12. [Rules reference](#12-rules-reference)
+13. [What to do with non-fixable issues](#13-what-to-do-with-non-fixable-issues)
 
 ---
 
@@ -133,7 +134,48 @@ isml-a11y check --path ./cartridges
 
 ---
 
-## 6. Generating a JSON report
+## 6. Interactive fix mode
+
+Use `--interactive` when you want to decide the correct value for each fixable issue yourself, instead of accepting the automatic default.
+
+```bash
+node bin/isml-a11y.js check --path ./cartridges --interactive
+```
+
+For every fixable issue the tool will pause and show you:
+- The **exact file path and line number** — clickable in VS Code's integrated terminal (Ctrl+click) to jump straight to the problem
+- The **rule** that was violated and why
+- The **full element HTML** so you have context
+- A **prompt** asking for the value to set
+
+Example session:
+
+```
+────────────────────────────────────────────────────────────
+File:    C:\project\cartridges\templates\productTile.isml:14
+Rule:    [img-alt] img element is missing an alt attribute
+Element: <img src="${tile.image}" class="product-img">
+
+  Alt text (press Enter to mark as decorative with alt=""): Product image for ${tile.name}
+
+────────────────────────────────────────────────────────────
+File:    C:\project\cartridges\templates\checkout.isml:22
+Rule:    [button-type] button element is missing a type attribute
+Element: <button class="btn-primary">Place Order</button>
+
+  Button type (button/submit/reset) [button]: submit
+
+────────────────────────────────────────────────────────────
+
+Fixed 2 file(s) interactively.
+```
+
+**Tips:**
+- For `img-alt`: press Enter with no input to insert `alt=""` (marks the image as decorative)
+- For `button-type`: press Enter with no input to default to `type="button"`; type `submit` if the button submits a form
+- `--interactive` requires a real terminal — it will not work in CI pipelines (use `--fix` there instead)
+
+## 7. Generating a JSON report
 
 Use `--report-json` followed by a file path to save the results as a JSON file. This is useful for storing results, sending them to another system, or processing them with a script.
 
@@ -173,7 +215,7 @@ isml-a11y check --path ./cartridges --report-json ./reports/accessibility/report
 
 ---
 
-## 7. Generating an HTML report
+## 8. Generating an HTML report
 
 Use `--report-html` to save a self-contained HTML file you can open in any browser. This is useful for sharing results with designers, project managers, or QA teams.
 
@@ -189,7 +231,7 @@ Then open `report.html` in your browser. The report includes:
 
 ---
 
-## 8. Combining options
+## 9. Combining options
 
 All options can be combined freely in a single command.
 
@@ -214,7 +256,7 @@ isml-a11y check --path ./cartridges --fix --report-html report.html
 
 ---
 
-## 9. Running silently (for CI pipelines)
+## 10. Running silently (for CI pipelines)
 
 Add `--silent` to suppress all terminal output. The tool will still exit with the correct code, so your CI pipeline will still fail when issues are found.
 
@@ -232,7 +274,7 @@ If the command exits with code `1`, the pipeline fails and you can attach `acces
 
 ---
 
-## 10. Exit codes
+## 11. Exit codes
 
 The tool always exits with one of these three codes:
 
@@ -256,7 +298,7 @@ echo $LASTEXITCODE
 
 ---
 
-## 11. Rules reference
+## 12. Rules reference
 
 ### `img-alt` — Critical — Fixable
 
@@ -397,7 +439,7 @@ Every `<a>` element must have accessible text so users know where the link goes.
 
 ---
 
-## 12. What to do with non-fixable issues
+## 13. What to do with non-fixable issues
 
 For `input-label` and `empty-links`, the tool tells you exactly where the problem is. Here is the workflow:
 
