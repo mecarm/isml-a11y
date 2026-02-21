@@ -34,11 +34,27 @@ It does **not** modify your code unless you explicitly tell it to with the `--fi
 
 **Option A — Clone from GitHub** (current method while npm package is not yet published):
 
+If you just want to use the tool without contributing, clone it directly:
+
 ```bash
 git clone https://github.com/mecarm/isml-a11y.git
 cd isml-a11y
 npm install
 ```
+
+If you want to make changes and contribute back, **fork it first**:
+
+1. Go to `https://github.com/mecarm/isml-a11y`
+2. Click the **Fork** button (top right) — this creates a copy under your own GitHub account
+3. Clone your fork instead:
+
+```bash
+git clone https://github.com/YOUR-USERNAME/isml-a11y.git
+cd isml-a11y
+npm install
+```
+
+With a fork you can freely make changes, push to your own copy, and open a Pull Request to propose your changes back to the original repo.
 
 Once cloned, run every command using `node bin/isml-a11y.js` instead of `isml-a11y`:
 
