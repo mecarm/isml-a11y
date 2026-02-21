@@ -58,3 +58,19 @@ test('empty-links: no issue with empty aria-label is still flagged', () => {
   const issues = check('<a href="/home" aria-label=""></a>');
   assert.equal(issues.length, 1);
 });
+
+test('empty-links: skips anchor with aria-hidden="true"', () => {
+  const issues = check('<a href="/home" aria-hidden="true"></a>');
+  assert.equal(issues.length, 0);
+});
+
+test('empty-links: skips anchor inside aria-hidden container', () => {
+  const issues = check('<div aria-hidden="true"><a href="/home"></a></div>');
+  assert.equal(issues.length, 0);
+});
+
+test('empty-links: still reports non-hidden anchor alongside hidden one', () => {
+  const issues = check('<a href="/home" aria-hidden="true"></a><a href="/about"></a>');
+  assert.equal(issues.length, 1);
+  assert.equal(issues[0].ruleId, 'empty-links');
+});

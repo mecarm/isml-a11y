@@ -7,7 +7,7 @@
     "isml-a11y": "./bin/isml-a11y.js"
   },
   "scripts": {
-    "test": "node --test tests/rules/img-alt.test.js tests/rules/button-type.test.js tests/rules/input-label.test.js tests/rules/empty-links.test.js tests/scanner.test.js"
+    "test": "node --test tests/rules/img-alt.test.js tests/rules/button-type.test.js tests/rules/input-label.test.js tests/rules/empty-links.test.js tests/scanner.test.js tests/reporters/json-reporter.test.js tests/reporters/html-reporter.test.js tests/integration.test.js"
   },
   "keywords": ["accessibility", "a11y", "isml", "salesforce", "b2c", "linter"],
   "license": "MIT",

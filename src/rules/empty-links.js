@@ -15,15 +15,15 @@ const emptyLinks = {
     $('a').each((_, el) => {
       const $el = $(el);
 
+      // Skip elements intentionally hidden from assistive technology
+      if ($el.attr('aria-hidden') === 'true') return;
+      if ($el.closest('[aria-hidden="true"]').length > 0) return;
+
       const hasAriaLabel = $el.attr('aria-label') !== undefined && $el.attr('aria-label').trim() !== '';
       const hasAriaLabelledby = $el.attr('aria-labelledby') !== undefined;
       const hasTitle = $el.attr('title') !== undefined && $el.attr('title').trim() !== '';
-
-      // Check for visible text content (trimmed)
       const textContent = $el.text().trim();
       const hasText = textContent.length > 0;
-
-      // Check for child img with a non-empty alt attribute
       const hasImgWithAlt = $el.find('img').toArray().some((img) => {
         const alt = $(img).attr('alt');
         return alt !== undefined && alt.trim() !== '';
